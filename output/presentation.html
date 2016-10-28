@@ -1,0 +1,826 @@
+<!doctype html>
+<html lang="en">
+
+	<head>
+		<meta charset="utf-8">
+
+		<title>
+Reproducible Data Analysis in Python
+</title>
+
+		<meta name="description" content="A framework for easily creating beautiful presentations using HTML">
+		<meta name="author" content="Hakim El Hattab">
+
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+
+		<link rel="stylesheet" href="css/reveal.css">
+		<link rel="stylesheet" href="css/theme/black.css" id="theme">
+
+		<!-- Theme used for syntax highlighting of code -->
+		<link rel="stylesheet" href="lib/css/zenburn.css">
+
+		<!-- Printing and PDF exports -->
+		<script>
+			var link = document.createElement( 'link' );
+			link.rel = 'stylesheet';
+			link.type = 'text/css';
+			link.href = window.location.search.match( /print-pdf/gi ) ? 'css/print/pdf.css' : 'css/print/paper.css';
+			document.getElementsByTagName( 'head' )[0].appendChild( link );
+		</script>
+        <style>
+.caption {
+     bottom:0px;
+     right:0px;
+     position:absolute;
+}
+        </style>
+		<!--[if lt IE 9]>
+		<script src="lib/js/html5shiv.js"></script>
+		<![endif]-->
+
+        <script src="https://code.jquery.com/jquery-2.2.4.min.js"></script>
+        <link href="bokehjs/bokeh-0.12.3.min.css" rel="stylesheet" type="text/css">
+        <link href="bokehjs/bokeh-widgets-0.12.3.min.css" rel="stylesheet" type="text/css">
+        <script src="bokehjs/bokeh-0.12.3.min.js"></script>
+        <script src="bokehjs/bokeh-widgets-0.12.3.min.js"></script>
+    
+
+
+	</head>
+
+	<body>
+
+		<div class="reveal">
+
+			<!-- Any section element inside of this container is displayed as a slide -->
+			<div class="slides">
+                
+
+<section>
+    <h1>Reproducible Data Analysis in Python</h1>
+    <h3>可重用數據分析</h3>
+    <p>
+        <small>Created by <a href="http://christlc.github.io">Chris Choy</a> </small>
+    </p>
+    <p>
+        <small>Slides available here: <a href="https://github.com/christlc/pycon-hk-2016">https://github.com/christlc/pycon-hk-2016</a></small>
+    </p>
+</section>
+
+
+
+<section>
+<h3>Agenda</h3>
+
+<ol>
+<li>What is reproducibility?</li>
+<li>Why is it important?</li>
+<li>Demo</li>
+<li>Makefile to define pipeline</li>
+</ol>
+
+
+</section>
+
+<section>
+<h3>What is reproducibile data analysis?</h3>
+
+    <p class="fragment grow">Data analysis published with data and code.</p>
+</section>
+
+
+<section>
+<h2>Why reproducibility is important?</h2>
+
+</section>
+
+<section data-background="image/sharing.jpg" data-background-size="cover" data-background-position="center">
+    <h2 style="color:lightgray">Share your work easily.</h2>
+<div class="caption"><small><a href="https://flic.kr/p/nNXW2Z">Photo By Andrii</a></small></div>
+</section>
+
+<section>
+    <h2 style="color:lightgray">Make changes easily.</h2>
+    <img src="image/fixing_problems.png">
+<div class="caption"><small><a href="http://xkcd.com/1739/">xkcd</a></small></div>
+</section>
+
+
+<section data-background="image/frustrated.jpg" data-background-size="contain" data-background-position="center">
+    <h2 style="color:white">Then new data comes in...</h2>
+
+<div class="caption"><small><a href="https://flic.kr/p/mWat5p">Photo By Allan</a></small></div>
+</section>
+
+
+<section>
+<p>Hopefully you will agree that reproducibility is useful.</p>
+
+    <p>Share your work.</p>
+    <p>Adapt to changes.</p>
+    <p>Reflect updates in source data.</p>
+
+</section>
+
+<section>
+    <h2>Example</h2>
+</section>
+
+<section data-background="image/bbc_news.png" data-background-size="contain" data-background-position="center">
+    <div class="fragment">
+        <h2>What's your name if you are born now?</h2>
+        <div class="caption">
+            <small>
+                <a href="http://www.bbc.co.uk/newsbeat/article/37255033/a-16-year-old-british-girl-earns-48000-helping-chinese-people-name-their-babies">Link to BBC News</a>
+            </small>
+        </div>
+    </div>
+</section>
+
+<section>
+<h1>Demo</h1>
+</section>
+
+
+<section>
+    <section>
+        <p>Chris (M) in 1980 rank 319.0</p>
+        <div><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Decade</th>
+      <th>Name</th>
+      <th>Rank</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1980</td>
+      <td>Chris</td>
+      <td>319</td>
+    </tr>
+    <tr>
+      <td>1990</td>
+      <td>Brennan</td>
+      <td>319</td>
+    </tr>
+    <tr>
+      <td>2000</td>
+      <td>Aden</td>
+      <td>319</td>
+    </tr>
+    <tr>
+      <td>2010</td>
+      <td>Waylon</td>
+      <td>319</td>
+    </tr>
+  </tbody>
+</table></div>
+    </section>
+    <section>
+        <p>Top names of the decade 1980</p>
+        <div><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Name</th>
+      <th>Gender</th>
+      <th>Decade</th>
+      <th>Births</th>
+      <th>Rank</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Michael</td>
+      <td>M</td>
+      <td>1980</td>
+      <td>663592</td>
+      <td>1</td>
+    </tr>
+    <tr>
+      <td>Christopher</td>
+      <td>M</td>
+      <td>1980</td>
+      <td>554793</td>
+      <td>2</td>
+    </tr>
+    <tr>
+      <td>Matthew</td>
+      <td>M</td>
+      <td>1980</td>
+      <td>458894</td>
+      <td>3</td>
+    </tr>
+    <tr>
+      <td>Joshua</td>
+      <td>M</td>
+      <td>1980</td>
+      <td>396533</td>
+      <td>4</td>
+    </tr>
+    <tr>
+      <td>David</td>
+      <td>M</td>
+      <td>1980</td>
+      <td>383610</td>
+      <td>5</td>
+    </tr>
+    <tr>
+      <td>James</td>
+      <td>M</td>
+      <td>1980</td>
+      <td>356362</td>
+      <td>6</td>
+    </tr>
+    <tr>
+      <td>Daniel</td>
+      <td>M</td>
+      <td>1980</td>
+      <td>345414</td>
+      <td>7</td>
+    </tr>
+    <tr>
+      <td>Robert</td>
+      <td>M</td>
+      <td>1980</td>
+      <td>321598</td>
+      <td>8</td>
+    </tr>
+  </tbody>
+</table></div>
+    </section>
+    <section>
+        <p>Rank over time</p>
+        <iframe src="Chris_M_1980.html"
+        width="100%" height="1000" frameborder="0">
+        </iframe>
+    </section>
+    <section>
+        <p> Rank over time</p>
+        <div><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Name</th>
+      <th>Aden</th>
+      <th>Brennan</th>
+      <th>Chris</th>
+      <th>Waylon</th>
+    </tr>
+    <tr>
+      <th>Decade</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1980</th>
+      <td>2724</td>
+      <td>538</td>
+      <td>319</td>
+      <td>644</td>
+    </tr>
+    <tr>
+      <th>1990</th>
+      <td>1736</td>
+      <td>319</td>
+      <td>442</td>
+      <td>1014</td>
+    </tr>
+    <tr>
+      <th>2000</th>
+      <td>319</td>
+      <td>279</td>
+      <td>375</td>
+      <td>648</td>
+    </tr>
+    <tr>
+      <th>2010</th>
+      <td>306</td>
+      <td>316</td>
+      <td>452</td>
+      <td>319</td>
+    </tr>
+  </tbody>
+</table></div>
+    </section>
+    <section>
+        <p>Births over time</p>
+        <div><table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Name</th>
+      <th>Aden</th>
+      <th>Brennan</th>
+      <th>Chris</th>
+      <th>Waylon</th>
+    </tr>
+    <tr>
+      <th>Decade</th>
+      <th></th>
+      <th></th>
+      <th></th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>1980</th>
+      <td>184</td>
+      <td>2719</td>
+      <td>6477</td>
+      <td>1944</td>
+    </tr>
+    <tr>
+      <th>1990</th>
+      <td>529</td>
+      <td>8299</td>
+      <td>5133</td>
+      <td>1206</td>
+    </tr>
+    <tr>
+      <th>2000</th>
+      <td>9638</td>
+      <td>11738</td>
+      <td>7646</td>
+      <td>3339</td>
+    </tr>
+    <tr>
+      <th>2010</th>
+      <td>5622</td>
+      <td>5195</td>
+      <td>3100</td>
+      <td>5112</td>
+    </tr>
+  </tbody>
+</table></div>
+    </section>
+</section>
+
+
+<section>
+<h3> Lets get started - Plan </h3>
+<p class="fragment grow">Download data</p>
+<p class="fragment grow">Data wrangling</p>
+<p class="fragment grow">Generate result</p>
+<p class="fragment grow">Create visualization</p>
+<p class="fragment grow">Making it reproducible</p>
+</section>
+
+<section>
+<h3>US Baby Name</h3>
+    <a href="https://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data">
+        <img src="image/data_download.png">
+    </a>
+</section>
+
+<section>
+<h3> Download Data </h3>
+<pre><code data-trim data-noescape>
+# download.sh
+mkdir -p data
+wget -P data https://www.ssa.gov/oact/babynames/names.zip
+cd data && unzip names.zip
+</code></pre>
+</section>
+
+<section>
+<h3> One file for each year </h3>
+<img src="image/folder_content.png">
+</section>
+
+<section>
+<h3> Data format </h3>
+<pre><code data-trim data-noescape>
+Emma,F,20355
+Olivia,F,19553
+Sophia,F,17327
+Ava,F,16286
+Isabella,F,15504
+Mia,F,14820
+Abigail,F,12311
+Emily,F,11727
+Charlotte,F,11332
+Harper,F,10241
+</code></pre>
+</section>
+
+<section>
+    <section>
+    <h4>Lets use Pandas to join the files together</h4>
+    <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>Gender</th>
+      <th>Births</th>
+      <th>Year</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Mary</td>
+      <td>F</td>
+      <td>7065</td>
+      <td>1880</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Anna</td>
+      <td>F</td>
+      <td>2604</td>
+      <td>1880</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Emma</td>
+      <td>F</td>
+      <td>2003</td>
+      <td>1880</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Elizabeth</td>
+      <td>F</td>
+      <td>1939</td>
+      <td>1880</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Minnie</td>
+      <td>F</td>
+      <td>1746</td>
+      <td>1880</td>
+    </tr>
+  </tbody>
+</table>
+    </section>
+
+    <section>
+    <h3>Read the files and add the Year column</h3>
+    <pre> <code data-noescape>
+# clean_data.py
+import pandas as pd
+years = range(1880,2015)
+
+print("Reading data")
+
+def read_one_year(year):
+    path = 'data/yob%d.txt' % year
+    one_year_data = pd.read_csv(path,
+                                names=['Name','Gender','Births'])
+    one_year_data['Year'] = year
+    return one_year_data
+
+names_data = pd.concat([read_one_year(year) for year in years])
+    </code></pre>
+    </section>
+</section>
+<section>
+<section>
+   <h3>Group by decades and rank with Pandas</h3>
+  <table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Name</th>
+      <th>Gender</th>
+      <th>Decade</th>
+      <th>Births</th>
+      <th>Rank</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>Aaban</td>
+      <td>M</td>
+      <td>2000</td>
+      <td>11</td>
+      <td>17467</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>Aaban</td>
+      <td>M</td>
+      <td>2010</td>
+      <td>61</td>
+      <td>6633</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>Aabha</td>
+      <td>F</td>
+      <td>2010</td>
+      <td>21</td>
+      <td>16513</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>Aabid</td>
+      <td>M</td>
+      <td>2000</td>
+      <td>5</td>
+      <td>21065</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>Aabriella</td>
+      <td>F</td>
+      <td>2000</td>
+      <td>5</td>
+      <td>30672</td>
+    </tr>
+  </tbody>
+</table>
+</section>
+
+<section>
+<h3>clean_data.py (continue)</h3>
+<small><pre> <code>
+print("Generating summary by decade")
+
+def convert_year_to_decade(year):
+    return '%i0s' % np.floor(year/10)
+
+names_data['Decade'] = names_data['Year'].apply(convert_year_to_decade)
+
+names_by_decade = names_data.groupby(['Name', 'Gender', 'Decade'])['Births'].sum().reset_index()
+names_by_decade['Rank'] = names_by_decade.groupby(['Gender','Decade'])['Births'].rank(method='first',
+                                                                                      ascending=False
+                                                                                      )
+names_by_decade.to_csv('data/names_by_decade.csv')
+</code></pre></small>
+</section>
+</section>
+
+<section>
+<section>
+<h3> Generate summary</h3>
+<p> The rank of this name is 319.0.</p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Decade</th>
+      <th>Name</th>
+      <th>Rank</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1980</td>
+      <td>Chris</td>
+      <td>319</td>
+    </tr>
+    <tr>
+      <td>1990</td>
+      <td>Brennan</td>
+      <td>319</td>
+    </tr>
+    <tr>
+      <td>2000</td>
+      <td>Aden</td>
+      <td>319</td>
+    </tr>
+    <tr>
+      <td>2010</td>
+      <td>Waylon</td>
+      <td>319</td>
+    </tr>
+  </tbody>
+</table>
+</section>
+<section>
+<h3>Generate Summary</h3>
+<pre><code class="python">
+gender_filter='M'
+decade_filter=1980
+target_name='Chris'
+
+df = pd.read_csv('./data/names_by_decade.csv')
+rank = \
+  df['Rank'][(df['Gender']==gender_filter) &
+             (df['Name']==target_name) &
+             (df['Decade']==decade_filter)].iloc[0]
+names_list = \
+    df[(df['Gender']==gender_filter) &
+       (df['Rank']==rank)].Name
+
+(rank,
+        names_by_decade[names_by_decade.Name.isin(names_list)])
+</code></pre>
+</section>
+</section>
+
+<section>
+<h3>How do we put the tables in the reports?</h3>
+</section>
+
+<section>
+<h3>This title is inserted by Jinja2 template.</h3>
+    
+<pre><code>
+&lt;section&gt;
+    &lt;h3&gt;{{ title_variable }}&lt;/h3&gt;
+&lt;/section&gt;
+</code></pre>
+    
+<pre>
+<code>
+template = env.get_template('content.j2')
+parsed_result = template.render(
+    {'title_variable': 'This title is inserted by Jinja2 template.'}
+    )
+</code></pre>
+</section>
+
+<section>
+<section>
+<h3>Result Table</h3>
+
+<pre><code>
+<p> The rank of this name is {{ rank }}.</p>
+{{ result_table }}
+</code></pre>
+
+
+<pre><code>
+rank, df = get_result(gender_filter='M',
+              decade_filter='1980s',
+               target_name='Chris')
+template.render(
+    {'rank': rank,
+    'result_table': df.to_html()}
+    )
+</code></pre>
+</section>
+
+<section>
+<p> The rank of this name is 319.0.</p>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th>Decade</th>
+      <th>Name</th>
+      <th>Rank</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>1980</td>
+      <td>Chris</td>
+      <td>319</td>
+    </tr>
+    <tr>
+      <td>1990</td>
+      <td>Brennan</td>
+      <td>319</td>
+    </tr>
+    <tr>
+      <td>2000</td>
+      <td>Aden</td>
+      <td>319</td>
+    </tr>
+    <tr>
+      <td>2010</td>
+      <td>Waylon</td>
+      <td>319</td>
+    </tr>
+  </tbody>
+</table>
+</section>
+</section>
+
+<section>
+<h3>Bokeh plot</h3>
+<pre><code>
+from bokeh.charts import Line, save, output_file, ColumnDataSource
+output_file("output/plot.html")
+tooltips = [(c, '@' + c) for c in df.columns]
+p = Line(df, x='Decade', y='Rank',
+         title="Rank across Time", color='Name',
+         xlabel="Decade", ylabel="Rank",
+         tooltips=tooltips)
+p.circle('Decade', 'Rank',
+         color='gray', alpha=0.5, source=ColumnDataSource(df))
+save(p)
+</code></pre>
+</section>
+
+<section>
+
+<pre><code>
+    <iframe src="{{ plot_path }}"
+    width="100%" height="1000" frameborder="0">
+    </iframe>
+</code></pre>
+
+
+
+    <iframe src="Chris_M_1980.html" width="100%" height="1000" frameborder="0">
+    </iframe>
+</section>
+
+<section>
+<h3>Link it all in a pipeline</h3>
+<p>By running the following command</p>
+<pre><code>
+./download.sh
+python clean_data.py
+python compile_report.py
+</code></pre>
+</section>
+
+<section>
+<h3>We don't want to download the data every time!</h3>
+</section>
+
+<section>
+<h3>Makefile</h3>
+<pre><code>
+data/yob*.csv:
+	./download.sh
+
+names_by_decade.csv: data/yob*.csv clean_data.py
+	python clean_data.py
+
+output/presentation.html: compile_reports.py data/names_by_decade.csv templates/*.j2
+	python compile_reports.py
+</code></pre>
+<p>Just call:</p>
+<pre><code>
+make output/presentation.html
+</code></pre>
+</section>
+
+<section>
+<h3>Why Makefile?</h3>
+
+<p>1. Manage dependencies.</p>
+<p>2. Rerun only when files are changed.</p>
+
+</section>
+
+<section>
+<h3>Demo (if there's time)</h3>
+</section>
+
+<section>
+<h3>Packages</h3>
+  <p> <a href="https://www.gnu.org/software/make/">GNU Make</a> for data pipeline</p>
+  <p> <a href="http://pandas.pydata.org">Pandas</a> for data manipulation </p>
+  <p> <a href="http://bokeh.pydata.org/en/latest/">Bokeh</a> for plots </p>
+  <p> <a href="http://jinja.pocoo.org">Jinja2</a> for templating </p>
+</section>
+
+<section>
+<h3> Questions?</h3>
+<small>Slides available here: <a href="https://github.com/christlc/pycon-hk-2016">https://github.com/christlc/pycon-hk-2016</a></small>
+</section>
+
+<section>
+<h3> Thank you </h3>
+</section>
+
+
+
+			</div>
+
+		</div>
+
+		<script src="lib/js/head.min.js"></script>
+		<script src="js/reveal.js"></script>
+
+		<script>
+
+			// More info https://github.com/hakimel/reveal.js#configuration
+			Reveal.initialize({
+				controls: true,
+				progress: true,
+				history: true,
+				center: true,
+
+				transition: 'slide', // none/fade/slide/convex/concave/zoom
+
+				// More info https://github.com/hakimel/reveal.js#dependencies
+				dependencies: [
+					{ src: 'lib/js/classList.js', condition: function() { return !document.body.classList; } },
+					{ src: 'plugin/markdown/marked.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/markdown/markdown.js', condition: function() { return !!document.querySelector( '[data-markdown]' ); } },
+					{ src: 'plugin/highlight/highlight.js', async: true, callback: function() { hljs.initHighlightingOnLoad(); } },
+					{ src: 'plugin/zoom-js/zoom.js', async: true },
+					{ src: 'plugin/notes/notes.js', async: true }
+				]
+			});
+
+		</script>
+
+	</body>
+</html>

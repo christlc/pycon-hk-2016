@@ -1,0 +1,393 @@
+{% extends "base.j2" %}
+
+{%  block title %}
+Reproducible Data Analysis in Python
+{% endblock %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block content %}
+
+<section>
+    <h1>Reproducible Data Analysis in Python</h1>
+    <h3>可重用數據分析</h3>
+    <p>
+        <small>Created by <a href="http://christlc.github.io">Chris Choy</a> </small>
+    </p>
+    <p>
+        <small>Slides available here: <a href="https://github.com/christlc/pycon-hk-2016">https://github.com/christlc/pycon-hk-2016</a></small>
+    </p>
+</section>
+
+
+
+<section>
+{% filter markdown | safe %}
+### Agenda
+
+1. What is reproducibility?
+2. Why is it important?
+3. Demo
+4. Makefile to define pipeline
+
+{% endfilter %}
+
+</section>
+
+<section>
+{% filter markdown | safe %}
+### What is reproducibile data analysis?
+{% endfilter %}
+    <p class="fragment grow">Data analysis published with data and code.</p>
+</section>
+
+
+<section>
+{% filter markdown | safe %}
+## Why reproducibility is important?
+{% endfilter %}
+</section>
+
+<section data-background="image/sharing.jpg" data-background-size="cover" data-background-position="center">
+    <h2 style="color:lightgray">Share your work easily.</h2>
+<div class="caption"><small><a href="https://flic.kr/p/nNXW2Z">Photo By Andrii</a></small></div>
+</section>
+
+<section>
+    <h2 style="color:lightgray">Make changes easily.</h2>
+    <img src="image/fixing_problems.png">
+<div class="caption"><small><a href="http://xkcd.com/1739/">xkcd</a></small></div>
+</section>
+
+
+<section data-background="image/frustrated.jpg" data-background-size="contain" data-background-position="center">
+    <h2 style="color:white">Then new data comes in...</h2>
+
+<div class="caption"><small><a href="https://flic.kr/p/mWat5p">Photo By Allan</a></small></div>
+</section>
+
+
+<section>
+{% filter markdown | safe %}
+Hopefully you will agree that reproducibility is useful.
+{% endfilter %}
+    <p>Share your work.</p>
+    <p>Adapt to changes.</p>
+    <p>Reflect updates in source data.</p>
+
+</section>
+
+<section>
+    <h2>Example</h2>
+</section>
+
+<section data-background="image/bbc_news.png" data-background-size="contain" data-background-position="center">
+    <div class="fragment">
+        <h2>What's your name if you are born now?</h2>
+        <div class="caption">
+            <small>
+                <a href="http://www.bbc.co.uk/newsbeat/article/37255033/a-16-year-old-british-girl-earns-48000-helping-chinese-people-name-their-babies">Link to BBC News</a>
+            </small>
+        </div>
+    </div>
+</section>
+
+<section>
+<h1>Demo</h1>
+</section>
+
+{% for item in results %}
+<section>
+    <section>
+        <p>{{ item.message }}{{ item.name }} ({{ item.config.gender }}) in {{ item.config.decade }} rank {{ item.rank }}</p>
+        <div>{{ item.result_table }}</div>
+    </section>
+    <section>
+        <p>Top names of the decade {{ item.config.decade }}</p>
+        <div>{{ item.top_table }}</div>
+    </section>
+    <section>
+        <p>Rank over time</p>
+        <iframe src="{{ item.plot_path }}"
+        width="100%" height="1000" frameborder="0">
+        </iframe>
+    </section>
+    <section>
+        <p> Rank over time</p>
+        <div>{{ item.rank_table }}</div>
+    </section>
+    <section>
+        <p>Births over time</p>
+        <div>{{ item.birth_table }}</div>
+    </section>
+</section>
+{% endfor %}
+
+<section>
+<h3> Lets get started - Plan </h3>
+<p class="fragment grow">Download data</p>
+<p class="fragment grow">Data wrangling</p>
+<p class="fragment grow">Generate result</p>
+<p class="fragment grow">Create visualization</p>
+<p class="fragment grow">Making it reproducible</p>
+</section>
+
+<section>
+<h3>US Baby Name</h3>
+    <a href="https://catalog.data.gov/dataset/baby-names-from-social-security-card-applications-national-level-data">
+        <img src="image/data_download.png">
+    </a>
+</section>
+
+<section>
+<h3> Download Data </h3>
+<pre><code data-trim data-noescape>
+# download.sh
+mkdir -p data
+wget -P data https://www.ssa.gov/oact/babynames/names.zip
+cd data && unzip names.zip
+</code></pre>
+</section>
+
+<section>
+<h3> One file for each year </h3>
+<img src="image/folder_content.png">
+</section>
+
+<section>
+<h3> Data format </h3>
+<pre><code data-trim data-noescape>
+Emma,F,20355
+Olivia,F,19553
+Sophia,F,17327
+Ava,F,16286
+Isabella,F,15504
+Mia,F,14820
+Abigail,F,12311
+Emily,F,11727
+Charlotte,F,11332
+Harper,F,10241
+</code></pre>
+</section>
+
+<section>
+    <section>
+    <h4>Lets use Pandas to join the files together</h4>
+    {{ names_data }}
+    </section>
+
+    <section>
+    <h3>Read the files and add the Year column</h3>
+    <pre> <code data-noescape>
+# clean_data.py
+import pandas as pd
+years = range(1880,2015)
+
+print("Reading data")
+
+def read_one_year(year):
+    path = 'data/yob%d.txt' % year
+    one_year_data = pd.read_csv(path,
+                                names=['Name','Gender','Births'])
+    one_year_data['Year'] = year
+    return one_year_data
+
+names_data = pd.concat([read_one_year(year) for year in years])
+    </code></pre>
+    </section>
+</section>
+<section>
+<section>
+   <h3>Group by decades and rank with Pandas</h3>
+  {{ names_by_decade }}
+</section>
+
+<section>
+<h3>clean_data.py (continue)</h3>
+<small><pre> <code>
+print("Generating summary by decade")
+
+def convert_year_to_decade(year):
+    return '%i0s' % np.floor(year/10)
+
+names_data['Decade'] = names_data['Year'].apply(convert_year_to_decade)
+
+names_by_decade = names_data.groupby(['Name', 'Gender', 'Decade'])['Births'].sum().reset_index()
+names_by_decade['Rank'] = names_by_decade.groupby(['Gender','Decade'])['Births'].rank(method='first',
+                                                                                      ascending=False
+                                                                                      )
+names_by_decade.to_csv('data/names_by_decade.csv')
+</code></pre></small>
+</section>
+</section>
+
+<section>
+<section>
+<h3> Generate summary</h3>
+<p> The rank of this name is {{ rank }}.</p>
+{{ result_table }}
+</section>
+<section>
+<h3>Generate Summary</h3>
+<pre><code class="python">
+gender_filter='M'
+decade_filter=1980
+target_name='Chris'
+
+df = pd.read_csv('./data/names_by_decade.csv')
+rank = \
+  df['Rank'][(df['Gender']==gender_filter) &
+             (df['Name']==target_name) &
+             (df['Decade']==decade_filter)].iloc[0]
+names_list = \
+    df[(df['Gender']==gender_filter) &
+       (df['Rank']==rank)].Name
+
+(rank,
+        names_by_decade[names_by_decade.Name.isin(names_list)])
+</code></pre>
+</section>
+</section>
+
+<section>
+<h3>How do we put the tables in the reports?</h3>
+</section>
+
+<section>
+<h3>{{ title_variable }}</h3>
+    {% raw %}
+<pre><code>
+&lt;section&gt;
+    &lt;h3&gt;{{ title_variable }}&lt;/h3&gt;
+&lt;/section&gt;
+</code></pre>
+    {% endraw %}
+<pre>
+<code>
+template = env.get_template('content.j2')
+parsed_result = template.render(
+    {'title_variable': 'This title is inserted by Jinja2 template.'}
+    )
+</code></pre>
+</section>
+
+<section>
+<section>
+<h3>Result Table</h3>
+{% raw %}
+<pre><code>
+<p> The rank of this name is {{ rank }}.</p>
+{{ result_table }}
+</code></pre>
+{% endraw %}
+
+<pre><code>
+rank, df = get_result(gender_filter='M',
+              decade_filter='1980s',
+               target_name='Chris')
+template.render(
+    {'rank': rank,
+    'result_table': df.to_html()}
+    )
+</code></pre>
+</section>
+
+<section>
+<p> The rank of this name is {{ rank }}.</p>
+{{ result_table }}
+</section>
+</section>
+
+<section>
+<h3>Bokeh plot</h3>
+<pre><code>
+from bokeh.charts import Line, save, output_file, ColumnDataSource
+output_file("output/plot.html")
+tooltips = [(c, '@' + c) for c in df.columns]
+p = Line(df, x='Decade', y='Rank',
+         title="Rank across Time", color='Name',
+         xlabel="Decade", ylabel="Rank",
+         tooltips=tooltips)
+p.circle('Decade', 'Rank',
+         color='gray', alpha=0.5, source=ColumnDataSource(df))
+save(p)
+</code></pre>
+</section>
+
+<section>
+{% raw %}
+<pre><code>
+    <iframe src="{{ plot_path }}"
+    width="100%" height="1000" frameborder="0">
+    </iframe>
+</code></pre>
+
+{% endraw %}
+
+    <iframe src="{{ plot_path }}" width="100%" height="1000" frameborder="0">
+    </iframe>
+</section>
+
+<section>
+<h3>Link it all in a pipeline</h3>
+<p>By running the following command</p>
+<pre><code>
+./download.sh
+python clean_data.py
+python compile_report.py
+</code></pre>
+</section>
+
+<section>
+<h3>We don't want to download the data every time!</h3>
+</section>
+
+<section>
+<h3>Makefile</h3>
+<pre><code>
+data/yob*.csv:
+	./download.sh
+
+names_by_decade.csv: data/yob*.csv clean_data.py
+	python clean_data.py
+
+output/presentation.html: compile_reports.py data/names_by_decade.csv templates/*.j2
+	python compile_reports.py
+</code></pre>
+<p>Just call:</p>
+<pre><code>
+make output/presentation.html
+</code></pre>
+</section>
+
+<section>
+<h3>Why Makefile?</h3>
+
+<p>1. Manage dependencies.</p>
+<p>2. Rerun only when files are changed.</p>
+
+</section>
+
+<section>
+<h3>Demo (if there's time)</h3>
+</section>
+
+<section>
+<h3>Packages</h3>
+  <p> <a href="https://www.gnu.org/software/make/">GNU Make</a> for data pipeline</p>
+  <p> <a href="http://pandas.pydata.org">Pandas</a> for data manipulation </p>
+  <p> <a href="http://bokeh.pydata.org/en/latest/">Bokeh</a> for plots </p>
+  <p> <a href="http://jinja.pocoo.org">Jinja2</a> for templating </p>
+</section>
+
+<section>
+<h3> Questions?</h3>
+<small>Slides available here: <a href="https://github.com/christlc/pycon-hk-2016">https://github.com/christlc/pycon-hk-2016</a></small>
+</section>
+
+<section>
+<h3> Thank you </h3>
+</section>
+{% endblock %}

@@ -1,0 +1,5 @@
+pandas==0.16.2
+numpy==1.11.1
+bokeh==0.12.3
+Jinja2==2.8
+jellyfish==0.5.6
