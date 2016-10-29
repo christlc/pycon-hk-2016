@@ -15,9 +15,8 @@ Data analysis published with data and code.
 # Agenda
 
 1. Why reproducibility is important?
-2. Scenario
-3. Introduce 
-4. Further Reading / Ideas
+2. Examples
+3. Further Reading / Ideas
 
 # Data used
 
